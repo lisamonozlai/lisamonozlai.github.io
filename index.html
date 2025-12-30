@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="google-site-verification" content="dxEeyIt-hxtQu9up5KvdZUSlV1xI-Y68p-Ggf1Poh1k" />
-  <title>Lisa Monozlai | Data Strategy & Delivery </title>
+  <title>Lisa Monozlai | Building Data-Driven Systems for Equitable, Actionable Decisions </title>
   <meta name="description" content="PMP-certified project manager and data strategist helping mission-driven teams make data-driven decisions. Explore portfolio projects across data collection, analysis, project delivery, and communication.">
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -341,47 +341,46 @@
   }
 }
 
-    /* PORTFOLIO */
+/* PORTFOLIO */
 
-    #portfolio-wrapper {
-      background: var(--bg-portfolio);
-    }
+#portfolio {
+  background: var(--bg-portfolio);
+}
 
-    #portfolio-wrapper h3 {
-      color: #ffffff;
-      opacity: 0.9;
-    }
+#portfolio h3 {
+  color: #ffffff;
+  opacity: 0.9;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 40px;
-    }
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
 
-    .tile {
-      display: flex;
-      flex-direction: column;
-      height: 260px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      text-decoration: none;
-      color: var(--text-main);
-      background: #ffffff;
-      box-shadow: var(--shadow-soft);
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
-    }
+.tile {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--text-main);
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+}
 
-    /* Only clickable cards should lift */
-    .tile.clickable:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-strong);
+/* Only clickable cards should lift */
+.tile.clickable:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-strong);
   cursor: pointer;
 }
 
 .tile-arrow {
-  color: #3b6ea8;        /* your blue highlight */
-  display: inline-block; /* allows hover animation if you add one later */
-  margin-left: 2px;      /* tiny spacing so it doesn’t crowd the text */
+  color: #3b6ea8;
+  display: inline-block;
+  margin-left: 2px;
 }
 
 .tile.clickable:hover .tile-arrow {
@@ -397,53 +396,68 @@
   opacity: 0.85;
 }
 
-    /* Muted colour blocks */
-    .tile-img-wrapper {
-      height: 20%;
-      width: 100%;
-      border-bottom: 1px solid #e4e4e4;
-    }
+.tile-img-wrapper {
+  height: 60px;
+  width: 100%;
+  border-bottom: 1px solid #e4e4e4;
+}
 
-    .tile-img-wrapper.tile-1 { background: var(--tile-1); }
-    .tile-img-wrapper.tile-2 { background: var(--tile-2); }
-    .tile-img-wrapper.tile-3 { background: var(--tile-3); }
-    .tile-img-wrapper.tile-4 { background: var(--tile-4); }
-    .tile-img-wrapper.tile-5 { background: var(--tile-5); }
-    .tile-img-wrapper.tile-6 { background: var(--tile-6); }
+.tile-img-wrapper.tile-1 { background: var(--tile-1); }
+.tile-img-wrapper.tile-2 { background: var(--tile-2); }
+.tile-img-wrapper.tile-3 { background: var(--tile-3); }
+.tile-img-wrapper.tile-4 { background: var(--tile-4); }
+.tile-img-wrapper.tile-5 { background: var(--tile-5); }
+.tile-img-wrapper.tile-6 { background: var(--tile-6); }
 
-    .tile-bottom {
-      height: 80%;
-      background: #ffffff;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+.tile-bottom {
+  background: #ffffff;
+  padding: 22px 20px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* added */
+  gap: 10px;
+}
 
-    .tile-label {
-      font-weight: 600;
-      font-size: 1.15rem;
-      margin-bottom: 6px;
-    }
+.tile-label {
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
 
-    .tile-desc {
-      font-size: 0.93rem;
-      color: var(--text-muted);
-    }
+.tile-desc {
+  font-size: 0.93rem;
+  color: var(--text-muted);
+}
+
+/* Added for Markdown-style formatting */
+.tile-desc p {
+  margin-bottom: 10px;
+  line-height: 1.45;
+}
+
+.tile-desc ul {
+  margin: 0 0 10px 18px;
+  padding: 0;
+}
+
+.tile-desc li {
+  margin-bottom: 6px;
+  line-height: 1.45;
+}
 
     /* GET IN TOUCH */
 
-    #contact-wrapper {
+    #contact {
       background: var(--bg-contact);
       border-top: 1px solid rgba(40, 67, 53, 0.12);
     }
 
-    #contact-wrapper .container {
+    #contact .container {
       max-width: 720px;
       text-align: center;
     }
 
-    #contact-wrapper h3 {
+    #contact h3 {
       color: #000000;
       margin-bottom: 20px;
     }
@@ -528,13 +542,13 @@
         <div id="home-text">
           <h1>Hi, I'm Lisa <span class="wave">👋</span></h1>
           <p class="hero-intro">
-            I’m a PMP-certified project manager and data strategist helping governments and nonprofits build data-driven systems for equitable, actionable decisions.
-            Here, you’ll find samples of my work across data collection, analysis, project delivery, and communication.
+            I’m a PMP-certified project manager and data strategist helping governments and nonprofits build data-driven systems for equitable, actionable decisions. 
+            Here, you’ll find original projects I designed using mock datasets that illustrate my <a href="#approach">approach</a> to analytics, coordination, and communication.
           </p>
 
           <div class="cta-row">
-            <a href="#portfolio-wrapper" class="hero-button">View My Work</a>
-            <a href="#contact-wrapper" class="hero-button-outline">Get in Touch</a>
+            <a href="#portfolio" class="hero-button">View My Work</a>
+            <a href="#contact" class="hero-button-outline">Get in Touch</a>
           </div>
         </div>
 
@@ -553,7 +567,7 @@
 <div class="divider"></div>
 
 <!-- APPROACH SECTION -->
-<div id="approach-wrapper" class="section-wrapper">
+<div id="approach" class="section-wrapper">
   <section class="container fade-section">
     <h3>Approach</h3>
 
@@ -598,73 +612,76 @@
 <div class="divider"></div>
 
   <!-- PORTFOLIO -->
-  <div id="portfolio-wrapper" class="section-wrapper">
+  <div id="portfolio" class="section-wrapper">
     <section class="container fade-section">
-      <h3>Portfolio</h3>
+      <h3>Portfolio Projects</h3>
 
-      <div class="grid">
-
-        <!-- Card 4 -->
-        <a class="tile clickable" href="https://github.com/lisamonozlai/exploratory-data-analysis-of-diabetes-progression/tree/main" target="_blank" rel="noopener noreferrer">
-          <div class="tile-img-wrapper tile-4"></div>
-          <div class="tile-bottom">
-            <div class="tile-label">Quantitative Analysis <span class="tile-arrow"> -></span>
-            </div>
-            <div class="tile-desc">Analyzed public interest data in Python, uncovering insights to inform policy decisions.</div>
-          </div>
-        </a>
+      <div class="portfolio-grid">
         
         <!-- Card 1 -->
         <a class="tile">
-          <div class="tile-img-wrapper tile-1"></div>
-          <div class="tile-bottom">
-            <div class="tile-label">Data Strategy <span class="coming-soon-tag">[WIP]</span> </div> 
-            <div class="tile-desc">Established key KPIs and considerations, ensuring ethical and effective data use. </div>
-          </div>
-        </a>
+  <div class="tile-img-wrapper tile-5"></div>
+  <div class="tile-bottom">
+    <div class="tile-label">
+      Equity-Focused Data System 
+    </div>
+    <div class="tile-desc">
+  <p>Designing a practical, equity-centered data system.</p>
+
+  <p><strong>Includes:</strong></p>
+  <ul>
+    <li><strong>Excel templates</strong> for standardized data collection</li>
+    <li><strong>PostgreSQL database</strong> linking grantee inputs to population metrics</li>
+    <li><strong>SQL queries</strong> to answer key policy questions</li>
+  </ul>
+
+  <p><strong>Demonstrates:</strong></p>
+  <ul>
+    <li>Systems-building</li>
+    <li>Data strategy</li>
+    <li>Workflow design</li>
+    <li>Equity-focused processes</li>
+  </ul>
+</div>
+    <div class="tile-link-disabled">→ Coming soon</div>
+  </div>
+</a>
 
         <!-- Card 2 -->
         <a class="tile">
-          <div class="tile-img-wrapper tile-2"></div>
-          <div class="tile-bottom">
-            <div class="tile-label">Data Collection <span class="coming-soon-tag">[WIP]</span> </div> 
-            <div class="tile-desc">Designed a data collection template to standardize data entry, reducing errors across teams.</div>
-          </div>
-        </a>
+  <div class="tile-img-wrapper tile-6"></div>
+  <div class="tile-bottom">
+    <div class="tile-label">
+      Insights for Decision-Makers 
+    </div>
+    <div class="tile-desc">
+  <p>Turning public-interest data into actionable insights.</p>
 
-        <!-- Card 3 -->
-        <a class="tile">
-          <div class="tile-img-wrapper tile-3"></div>
-          <div class="tile-bottom">
-            <div class="tile-label">Data Management <span class="coming-soon-tag">[WIP]</span> </div> 
-            <div class="tile-desc">Built a SQLite database to consolidate datasets, enabling easier analysis and insights.</div>
-          </div>
-        </a>
+  <p><strong>Includes:</strong></p>
+  <ul>
+    <li><strong>Python exploratory analysis</strong> and data visualization</li>
+    <li><strong>Plain-language report</strong> summarizing findings</li>
+    <li><strong>Confluence wiki</strong> for team coordination and dissemination</li>
+  </ul>
 
-        <!-- Card 5 -->
-        <a class="tile">
-          <div class="tile-img-wrapper tile-5"></div>
-          <div class="tile-bottom">
-            <div class="tile-label">Qualitative Analysis <span class="coming-soon-tag">[WIP]</span> </div> 
-            <div class="tile-desc">Summarized stakeholder feedback using AI, responsibly highlighting patterns to guide improvements.</div>
-          </div>
-        </a>
-
-        <!-- Card 6 -->
-        <a class="tile">
-          <div class="tile-img-wrapper tile-6"></div>
-          <div class="tile-bottom">
-            <div class="tile-label">Data Visualization <span class="coming-soon-tag">[WIP]</span> </div> 
-            <div class="tile-desc">Created a Tableau dashboard to visualize program results, making insights clear and actionable.</div>
-          </div>
-        </a>
+  <p><strong>Demonstrates:</strong></p>
+  <ul>
+    <li>Data analysis</li>
+    <li>Visualization</li>
+    <li>Knowledge translation</li>
+    <li>Cross-team communication</li>
+  </ul>
+</div>
+    <div class="tile-link-disabled">→ Coming soon</div>
+  </div>
+</a>
 
       </div>
     </section>
   </div>
 
   <!-- GET IN TOUCH -->
-  <div id="contact-wrapper" class="section-wrapper">
+  <div id="contact" class="section-wrapper">
     <section class="container fade-section">
       <h3>Get in Touch</h3>
       <p class="contact-text">
@@ -708,6 +725,3 @@
 </body>
 
 </html>
-
-
-
