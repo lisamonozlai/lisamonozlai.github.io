@@ -445,6 +445,20 @@
   line-height: 1.45;
 }
 
+/* Responsive layout — same breakpoints as approach section */
+@media (max-width: 840px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
     /* GET IN TOUCH */
 
     #contact {
