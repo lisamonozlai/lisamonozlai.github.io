@@ -136,100 +136,109 @@
 
     /* HERO */
 
-    #home-wrapper {
-      background: radial-gradient(circle at top left, #ffffff 0%, var(--bg-hero) 55%);
-      padding-top: 120px;
-      padding-bottom: 88px;
-    }
+#home-wrapper {
+  background: radial-gradient(circle at top left, #ffffff 0%, var(--bg-hero) 55%);
+  padding-top: 120px;
+  padding-bottom: 88px;
+}
 
-    #home-card {
-      position: relative;
-      background: #ffffff;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-soft);
-      padding: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 52px;
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
-      overflow: hidden;
-    }
+#home-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 52px;
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+  overflow: hidden;
+}
 
-    #home-card::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background: radial-gradient(circle at top right, rgba(40,67,53,0.08), transparent 60%);
-      opacity: 0.9;
-      pointer-events: none;
-      z-index: 0;
-    }
+#home-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at top right, rgba(40,67,53,0.08), transparent 60%);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
+}
 
-    #home-text {
-      flex: 1;
-      text-align: left;
-      position: relative;
-      z-index: 1;
-    }
+#home-text {
+  flex: 1;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
 
-    h1 {
-      font-size: 2.6rem;
-      font-weight: 600;
-      margin: 0 0 10px;
-      letter-spacing: -0.02em;
-    }
+h1 {
+  font-size: 2.1rem;
+  font-weight: 600;
+  margin: 0 0 6px; /* tightened spacing */
+  letter-spacing: -0.02em;
+}
 
-    h4 {
-      font-size: 1.1rem;
-      font-weight: 500;
-      margin: 0 0 18px;
-      color: var(--text-muted);
-    }
+/* NEW — tagline under your name */
+.hero-subtitle {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin: 2px 0 18px; /* tight, intentional spacing */
+  color: var(--text-muted);
+  letter-spacing: -0.01em;
+}
 
-    .hero-intro {
-      font-size: 1.05rem;
-      color: var(--text-main);
-      margin: 0 0 18px;
-      max-width: 540px;
-    }
+h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 18px;
+  color: var(--text-muted);
+}
 
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 22px;
-    }
+.hero-intro {
+  font-size: 1.05rem;
+  color: var(--text-main);
+  margin: 0 0 18px;
+  max-width: 540px;
+}
 
-    .hero-button,
-    .hero-button-outline {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 26px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-      outline: none;
-      transition: background 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
-    }
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 22px;
+}
 
-    .hero-button {
-      background: var(--green);
-      color: #ffffff;
-      box-shadow: 0 10px 20px rgba(40, 67, 53, 0.25);
-    }
+.hero-button,
+.hero-button-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 26px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: background 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
+}
 
-    .hero-button-outline {
-      background: #ffffff;
-      border: 2px solid var(--green);
-      color: var(--green);
-    }
+.hero-button {
+  background: var(--green);
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(40, 67, 53, 0.25);
+}
 
-    .hero-button:hover {
+.hero-button-outline {
+  background: #ffffff;
+  border: 2px solid var(--green);
+  color: var(--green);
+}
+
+.hero-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 24px rgba(40, 67, 53, 0.25);
 }
@@ -580,11 +589,12 @@
     <section class="container fade-section">
       <div id="home-card">
         <div id="home-text">
-          <h1>Lisa Monozlai | Building Data-Driven Systems</h1>
-          <p class="hero-intro">
-            I work across program management, operations, and data strategy to improve information flows and enable actionable, effective decisions. 
-            This site brings together my <a href="#approach">approach</a>, case studies, and the tools I use to help teams move from insight to action.
-          </p>
+          <h1>Lisa Monozlai</h1>
+            <h2 class="hero-subtitle">Building Data‑Driven Systems</h2>
+              <p class="hero-intro">
+               I work across program management, operations, and data strategy to improve information flows and enable effective decisions. 
+               This site brings together my <a href="#approach">approach</a>, case studies, and the tools I use to move from insight to action.
+              </p>
 
           <div class="cta-row">
             <a href="#portfolio" class="hero-button">View My Work</a>
@@ -786,6 +796,7 @@
 </body>
 
 </html>
+
 
 
 
