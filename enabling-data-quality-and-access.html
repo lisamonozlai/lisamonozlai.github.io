@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Case Study: Enabling Data Quality and Access | Lisa Monozlai</title>
+
+  <meta name="description" content="A hypothetical scenario showing how a small team can standardize data collection, build a relational database, and design a simple UI to improve data quality and access. By Lisa Monozlai.">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --text-main: #000000;
+      --text-muted: #000000;
+      --bg-page: #ffffff;
+      --bg-hero: #e6e6e6;
+      --green: #284335;
+      --radius: 16px;
+      --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.12);
+      --divider: #e5e5e5;
+      --principle-bg: #E3E3EB;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.7;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    #site-header {
+      width: 100%;
+      padding: 20px 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+
+    .nav-link {
+      color: #323231;
+      font-weight: 500;
+      padding: 0 8px;
+      position: relative;
+    }
+
+    .nav-link:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 16px;
+      background-color: #b5b5b5;
+    }
+
+    .section-wrapper { padding: 60px 0; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+    .divider { height: 1px; background: var(--divider); }
+
+    .fade-section {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-section.visible { opacity: 1; transform: translateY(0); }
+
+    .case-hero {
+      background: radial-gradient(circle at top left, #ffffff 0%, var(--bg-hero) 55%);
+      padding-top: 160px;
+      padding-bottom: 60px;
+    }
+
+    .case-title {
+      font-size: 2.4rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .case-byline {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .case-byline a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    .case-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 1000px;
+      line-height: 1.65;
+    }
+
+    .case-section { margin-bottom: 32px; }
+
+    .case-section-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .principles-wrapper {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .principle-row {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
+    .principle-summary-card {
+      flex: 1 1 260px;
+      background: var(--principle-bg);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+    }
+
+    .principle-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .example-card {
+      flex: 0 0 280px;
+      background: #ffffff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: block;
+      color: inherit;
+    }
+
+    .example-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    }
+
+    .example-label {
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: underline;
+    }
+
+    .example-link {
+      font-weight: 400;
+      color: #000;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: var(--green);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    footer {
+      text-align: center;
+      padding: 36px 20px 40px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    @media (max-width: 700px) {
+      .principle-row { display: block; }
+      .principle-summary-card { margin-bottom: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="site-header">
+  <div class="container nav-container">
+    <nav class="top-nav">
+      <a href="https://lisamonozlai.github.io/" class="nav-link">Home</a>
+      <a href="https://www.linkedin.com/in/lisamonozlai/" target="_blank" class="nav-link">LinkedIn</a>
+      <a href="https://github.com/lisamonozlai" target="_blank" class="nav-link">GitHub</a>
+      <a href="https://medium.com/@lisa.monozlai/about" target="_blank" class="nav-link">Medium</a>
+    </nav>
+  </div>
+</header>
+
+<div class="section-wrapper case-hero fade-section">
+  <section class="container">
+    <h1 class="case-title">Case Study: Enabling Data Quality and Access</h1>
+    <p class="case-subtitle">
+      A hypothetical scenario showing how a small team can standardize data collection, build a lightweight relational database, and design a simple UI to improve data quality and access.
+    </p>
+    <p class="case-byline">A Portfolio Project | By <a href="https://lisamonozlai.github.io/">Lisa Monozlai</a> </p>
+  </section>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-wrapper">
+<section class="container">
+
+<section class="case-section">
+  <h2 class="case-section-title">Overview</h2>
+  <p>
+    This case study shows how a small team can strengthen data quality and access by standardizing inputs, linking spreadsheets into a relational model, and exposing the data through a simple UI. The approach helps teams:
+  </p>
+  <ul>
+    <li>Collect data consistently using shared Excel templates</li>
+    <li>Integrate multiple spreadsheets into a coherent relational structure</li>
+    <li>Explore and update records through a user friendly interface</li>
+  </ul>
+</section>
+
+<section class="case-section">
+  <h2 class="case-section-title">Scenario</h2>
+  <p>
+    A small engagement team tracks organizations, contacts, and interactions across several programs, each using its own spreadsheet 
+    with different formats and naming conventions. As the team grows, answering basic questions requires manual cleanup and stitching data together. 
+    With no dedicated data engineer or CRM budget, the team needs a simple and maintainable solution. 
+  </p>
+</section>
+
+<section class="case-section">
+  <h2 class="case-section-title">Solution</h2>
+  <p>
+    The team can improve data quality and access by following three practical principles that enable consistent inputs, create connected records, and 
+    make information easy to update and explore through an interactive database. 
+  </p>
+
+  <a href="https://lisamonozlai-relational-database-demo.streamlit.app/" 
+     target="_blank"
+     style="display:inline-block; margin-top:16px; padding:12px 20px; background:#284335; color:#ffffff; font-weight:600; border-radius:10px; text-decoration:none; font-size:1rem;">
+     View the Interactive Database Demo
+  </a>
+</section>
+
+<section class="principles-wrapper">
+
+  <!-- PRINCIPLE 1 -->
+  <div class="principle-row">
+    <div class="principle-summary-card">
+      <div class="principle-title">Principle 1: Standardize Data Collection at the Source</div>
+      <p>
+        Using consistent methods and taxonomies when collecting data reduces cleanup work and makes it easier to integrate data into a unified structure.
+      </p>
+    </div>
+    <a class="example-card" href="https://github.com/lisamonozlai/relational-database-for-engagement-tracking/tree/main/data_sources" target="_blank">
+      <div class="example-label">See Example →</div>
+      <div class="example-link">Start with an Excel template outlining what data will be collected and in what format.</div>
+    </a>
+  </div>
+
+  <!-- PRINCIPLE 2 -->
+  <div class="principle-row">
+    <div class="principle-summary-card">
+      <div class="principle-title">Principle 2: Model Relationships in a Relational Database</div>
+      <p>
+        A relational database can help the team link spreadsheets together so they reduce duplication and keep information in a single place.
+      </p>
+    </div>
+    <a class="example-card" href="https://github.com/lisamonozlai/relational-database-for-engagement-tracking/tree/main/app" target="_blank">
+      <div class="example-label">See Example →</div>
+      <div class="example-link">Set up a database that links each spreadsheet together using Python and SQL.</div>
+    </a>
+  </div>
+
+  <!-- PRINCIPLE 3 -->
+  <div class="principle-row">
+    <div class="principle-summary-card">
+      <div class="principle-title">Principle 3: Provide a UI for Exploration and Updates</div>
+      <p>
+        A simple UI helps staff filter, explore, and update records without touching raw tables, which improves accuracy and reduces maintenance effort.
+      </p>
+    </div>
+    <a class="example-card" href="https://lisamonozlai-relational-database-demo.streamlit.app/" target="_blank">
+      <div class="example-label">See Example →</div>
+      <div class="example-link">Create an interactive UI in Streamlit to make the database accessible for all audiences.</div>
+    </a>
+  </div>
+
+</section>
+
+<section class="case-section" style="margin-top:40px;">
+  <h2 class="case-section-title">Results</h2>
+  <p>
+    By combining standardized templates, a relational schema, and a simple UI, the team can move from scattered spreadsheets to a coherent engagement picture. Staff can answer questions faster, trust that records are consistent, and maintain the system without specialized technical support.
+  </p>
+  <br><a href="https://lisamonozlai.github.io" class="back-link">← Back to Main Site</a>
+</section>
+
+</section>
+</div>
+
+<footer>© 2025 Lisa Monozlai | A personal portfolio site.</footer>
+
+<script>
+  const sections = document.querySelectorAll('.fade-section');
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+  sections.forEach(section => observer.observe(section));
+</script>
+
+</body>
+</html>
