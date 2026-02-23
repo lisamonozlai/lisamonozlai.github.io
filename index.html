@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="google-site-verification" content="dxEeyIt-hxtQu9up5KvdZUSlV1xI-Y68p-Ggf1Poh1k" />
   <meta name="msvalidate.01" content="57B95AD48F7BC57C796F18758A62FA72" />
-  <title>Lisa Monozlai | Building Data-Driven Systems</title>
+  <title>Lisa Monozlai, MPA, PMP | Building Data-Driven Systems</title>
   <meta name="description" content="Program and operations professional helping teams strengthen data use, information flows, and the systems that lead to clearer, more effective decisions.">
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -180,9 +180,18 @@ h1 {
   letter-spacing: -0.02em;
 }
 
-/* NEW — tagline under your name */
+/* Soften credentials so they don’t overpower the name */
+.credentials {
+  font-size: 0.6em;        /* smaller than the name */
+  font-weight: 300;        /* lighter weight */
+  opacity: 0.85;           /* visually softer */
+  margin-left: 6px;        /* breathing room */
+  letter-spacing: 0.5px;   /* improves readability for small caps */
+}
+
+/* Tagline under the name */
 .hero-subtitle {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 500;
   margin: 2px 0 18px; /* tight, intentional spacing */
   color: var(--text-muted);
@@ -602,7 +611,7 @@ h4 {
     <section class="container fade-section">
       <div id="home-card">
         <div id="home-text">
-          <h1>Lisa Monozlai</h1>
+          <h1>Lisa Monozlai <span class="credentials">MPA, PMP</span></h1>
             <h2 class="hero-subtitle">Building Data‑Driven Systems</h2>
               <p class="hero-intro">
                I’m a program management, operations, and data professional working to strengthen information flows and decision-making.
@@ -809,6 +818,7 @@ h4 {
 </body>
 
 </html>
+
 
 
 
