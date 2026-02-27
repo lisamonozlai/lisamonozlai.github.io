@@ -2,40 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>A Lightweight Approach to Data Quality and Access | Lisa Monozlai</title>
+  <title>Engagement Database & UI Demo | Lisa Monozlai </title>
 
-  <meta name="description" content="A hypothetical scenario showing how a small team can standardize data collection, build a relational database, and design a simple UI to improve data quality and access. By Lisa Monozlai.">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A portfolio project demonstrating how Python, SQL, SQLite, and Streamlit can transform multiple spreadsheets into a relational database with a clear UI for non-technical teams. By Lisa Monozlai.">  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
+    /* ================================
+       THEME TOKENS
+       Reusable color, radius, and shadow variables
+    ================================= */
     :root {
+      --bg-page: #fafafa;
+      --bg-card: #ffffff;
       --text-main: #000000;
-      --text-muted: #000000;
-      --bg-page: #ffffff;
-      --bg-hero: #e6e6e6;
-      --green: #284335;
+      --text-muted: #555555;
+      --accent: #284335;
+      --divider: #e3e3e3;
       --radius: 16px;
-      --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.12);
-      --divider: #e5e5e5;
-      --principle-bg: #F4F4F4;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.12);
+
+      --white: #ffffff;
+      --offwhite: #fafafa;
+      --charcoal: #323231;
     }
 
-    * { box-sizing: border-box; }
+    /* ================================
+       GLOBAL RESET & BASE TYPOGRAPHY
+    ================================= */
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      font-family: "Inter", system-ui, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
       background: var(--bg-page);
       color: var(--text-main);
-      line-height: 1.7;
-      scroll-behavior: smooth;
       -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      font-size: 1.05rem;
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
 
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ================================
+       HEADER & TOP NAVIGATION
+    ================================= */
     #site-header {
       width: 100%;
       padding: 20px 0;
@@ -48,14 +75,16 @@
     .top-nav {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       gap: 16px;
     }
 
     .nav-link {
+      text-decoration: none;
       color: #323231;
       font-weight: 500;
-      padding: 0 8px;
       position: relative;
+      padding: 0 8px;
     }
 
     .nav-link:not(:last-child)::after {
@@ -69,284 +98,693 @@
       background-color: #b5b5b5;
     }
 
-    .section-wrapper { padding: 60px 0; }
-    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
-    .divider { height: 1px; background: var(--divider); }
-
-    .fade-section {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    .fade-section.visible { opacity: 1; transform: translateY(0); }
-
-    .case-hero {
-      background: radial-gradient(circle at top left, #ffffff 0%, var(--bg-hero) 55%);
-      padding-top: 160px;
-      padding-bottom: 60px;
+    /* Main content spacing (accounts for absolute header) */
+    main {
+      padding: 130px 0 72px;
     }
 
-    .case-title {
-      font-size: 2.4rem;
+    /* ================================
+       SECTION LAYOUT & BACKGROUNDS
+    ================================= */
+    .section {
+      padding: 72px 0;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--divider);
+    }
+
+    .bg-white {
+      background: var(--white);
+    }
+
+    .bg-offwhite {
+      background: var(--offwhite);
+    }
+
+    .bg-charcoal {
+      background: var(--charcoal);
+      color: #ffffff;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin: 0 0 20px;
+    }
+
+    /* ================================
+       HERO CARD
+    ================================= */
+    .hero-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .hero-main {
+      flex: 2;
+    }
+
+    .hero-meta-box {
+      margin-top: 50px;
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--divider);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      align-self: flex-start;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      margin: 0 0 14px;
       letter-spacing: -0.02em;
     }
 
-    .case-byline {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 12px;
+    .hero-intro {
+      margin: 0 0 30px;
+      max-width: 620px;
     }
 
-    .case-byline a {
-      color: inherit;
-      text-decoration: underline;
-    }
-
-    .case-subtitle {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 1000px;
-      line-height: 1.65;
-    }
-
-    .case-section { margin-bottom: 32px; }
-
-    .case-section-title {
-      font-size: 1.3rem;
+    .badge-project {
+      display: inline-block;
+      background: #d9ecff;
+      color: #284335;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 14px;
     }
 
-    .principles-wrapper {
-      margin-top: 40px;
+    .cta-row {
       display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .principle-row {
-      display: flex;
-      gap: 24px;
-      align-items: stretch;
       flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
     }
 
-    .principle-summary-card {
-      flex: 1 1 260px;
-      background: var(--principle-bg);
-      border-radius: var(--radius);
-      padding: 22px 24px;
+    /* ================================
+       BUTTONS (Primary, Outline, Return)
+    ================================= */
+    .btn-primary,
+    .btn-outline,
+    .btn-return {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+      white-space: nowrap;
     }
 
-    .principle-title {
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 6px;
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(40, 67, 53, 0.25);
     }
 
-    .example-card {
-      flex: 0 0 280px;
+    .btn-outline {
       background: #ffffff;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    /* Return button at bottom of page, aligned with container content */
+    .btn-return {
+      background: #ffffff;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      margin-top: 40px;
+    }
+
+    .btn-primary:hover,
+    .btn-outline:hover,
+    .btn-return:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(40, 67, 53, 0.25);
+    }
+
+    /* ================================
+       INTERFACE PREVIEW CARDS
+    ================================= */
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 28px;
+    }
+
+    .screen-card {
+      background: var(--bg-card);
       border-radius: var(--radius);
       box-shadow: var(--shadow-soft);
-      padding: 18px 20px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      display: block;
-      color: inherit;
+      padding: 20px;
     }
 
-    .example-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
-    }
-
-    .example-label {
+    .screen-title {
+      font-size: 1rem;
       font-weight: 600;
-      color: var(--green);
-      text-decoration: underline;
+      margin: 0 0 12px;
     }
 
-    .example-link {
-      font-weight: 400;
-      color: #000;
+    .screen-img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
 
-    .back-link {
-      display: inline-block;
-      margin-top: 8px;
-      font-size: 0.95rem;
-      color: var(--green);
-      text-decoration: underline;
-      font-weight: 500;
+    .screen-img:hover {
+      transform: scale(1.02);
     }
 
+    /* ================================
+       IMAGE MODAL (Lightbox)
+    ================================= */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+
+    .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      border-radius: 12px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* ================================
+       APPROACH GRID (3 STEPS)
+    ================================= */
+    .approach-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .approach-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+      text-align: left;
+      position: relative;
+    }
+
+    /* Arrow between approach cards (desktop only) */
+    .approach-card:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: var(--white);
+    }
+
+    /* ================================
+       GENERIC GRIDS (Tools, Results, Scaling)
+    ================================= */
+    .tool-grid,
+    .flow-grid,
+    .card-grid {
+      display: grid;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .tool-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .flow-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      align-items: center;
+    }
+
+    .card-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tool-card,
+    .flow-card,
+    .info-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .tool-card a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+
+    .tool-title,
+    .flow-title,
+    .info-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 8px;
+      color: #000000;
+    }
+
+    .tool-text,
+    .flow-text,
+    .info-text {
+      font-size: 0.96rem;
+      margin: 0;
+      color: #000000;
+    }
+
+    /* Scaling grid: 2 columns for low-code vs technical examples */
+    .scaling-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    /* ================================
+       RESPONSIVE ADJUSTMENTS
+    ================================= */
+    @media (max-width: 840px) {
+      .hero-card {
+        flex-direction: column;
+        padding: 30px 24px;
+      }
+
+      .screens-grid,
+      .tool-grid,
+      .flow-grid,
+      .card-grid,
+      .approach-grid,
+      .scaling-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Remove arrows between approach cards on small screens */
+      .approach-card:not(:last-child)::after {
+        display: none;
+      }
+    }
+
+    /* ================================
+       FOOTER
+    ================================= */
     footer {
       text-align: center;
       padding: 36px 20px 40px;
       font-size: 0.9rem;
-      color: #888;
-    }
-
-    @media (max-width: 700px) {
-      .principle-row { display: block; }
-      .principle-summary-card { margin-bottom: 12px; }
+      color: #888888;
+      background: #ffffff;
     }
   </style>
 </head>
 
 <body>
 
-<header id="site-header">
-  <div class="container nav-container">
-    <nav class="top-nav">
-      <a href="https://lisamonozlai.github.io/" class="nav-link">Home</a>
-      <a href="https://www.linkedin.com/in/lisamonozlai/" target="_blank" class="nav-link">LinkedIn</a>
-      <a href="https://github.com/lisamonozlai" target="_blank" class="nav-link">GitHub</a>
-      <a href="https://medium.com/@lisa.monozlai/about" target="_blank" class="nav-link">Medium</a>
-      <a href="https://www.kaggle.com/lisamonozlai" target="_blank" class="nav-link">Kaggle</a>
-    </nav>
-  </div>
-</header>
-
-<div class="section-wrapper case-hero fade-section">
-  <section class="container">
-    <h1 class="case-title">A Lightweight Approach to Data Quality & Access</h1>
-    <p class="case-subtitle">
-      A hypothetical scenario showing how a small team can standardize data collection, build a lightweight relational database, and design a simple UI to improve data quality and access.
-    </p>
-    <p class="case-byline">A Portfolio Project | <a href="https://lisamonozlai.github.io/">Lisa Monozlai</a></p>
-  </section>
-</div>
-
-<div class="divider"></div>
-
-<div class="section-wrapper">
-<section class="container">
-
-<section class="case-section">
-  <h2 class="case-section-title">Overview</h2>
-  <p>
-    This case study shows how a small team can strengthen data quality and access by standardizing inputs, linking spreadsheets into a relational model, and exposing the data through a simple UI. The approach helps teams:
-  </p>
-  <ul>
-    <li>Collect data consistently using shared templates</li>
-    <li>Integrate multiple spreadsheets into a coherent relational structure</li>
-    <li>Explore and update records through a user friendly interface</li>
-  </ul>
-</section>
-
-<section class="case-section">
-  <h2 class="case-section-title">Scenario</h2>
-  <p>
-    A small engagement team tracks organizations, contacts, and interactions across several programs, each using its own spreadsheet 
-    with different formats and naming conventions. As the team grows, answering basic questions requires manual cleanup and stitching data together. 
-    With no dedicated data engineer or CRM budget, the team needs a simple and maintainable solution. 
-  </p>
-</section>
-
-<section class="case-section">
-  <h2 class="case-section-title">Solution</h2>
-  <p>
-    The team can improve data quality and access by following three practical principles that enable consistent inputs, create connected records, and 
-    make information easy to update and explore through an interactive database. 
-  </p>
-
-  <a href="https://github.com/lisamonozlai/relational-database-for-engagement-tracking/blob/main/readme.md" 
-     target="_blank"
-     style="display:inline-block; margin-top:16px; padding:12px 20px; background:#284335; color:#ffffff; font-weight:600; border-radius:10px; text-decoration:none; font-size:1rem;">
-     View the Interactive Database Demo
-  </a>
-</section>
-
-<section class="principles-wrapper">
-
-  <!-- PRINCIPLE 1 -->
-  <div class="principle-row">
-    <div class="principle-summary-card">
-      <div class="principle-title">Principle 1: Standardize Data Collection at the Source</div>
-      <p>
-        Using consistent methods and taxonomies when collecting data reduces cleanup work and makes it easier to integrate data into a unified structure.
-      </p>
+  <!-- ================================
+       FIXED HEADER NAVIGATION
+  ================================= -->
+  <header id="site-header">
+    <div class="container nav-container">
+      <nav class="top-nav" aria-label="Primary navigation">
+        <a href="https://lisamonozlai.github.io/" target="_blank" class="nav-link">Home</a>
+        <a href="https://www.linkedin.com/in/lisamonozlai/" target="_blank" class="nav-link">LinkedIn</a>
+        <a href="https://github.com/lisamonozlai" target="_blank" class="nav-link">GitHub</a>
+        <a href="https://medium.com/@lisa.monozlai/about" target="_blank" class="nav-link">Medium</a>
+        <a href="https://www.kaggle.com/lisamonozlai" target="_blank" class="nav-link">Kaggle</a>
+      </nav>
     </div>
-    <a class="example-card" href="https://github.com/lisamonozlai/relational-database-for-engagement-tracking/tree/main/data/raw" target="_blank">
-      <div class="example-label">See Example →</div>
-      <div class="example-link">Start with an Excel template outlining what data will be collected and in what format.</div>
-    </a>
+  </header>
+
+  <main>
+    <!-- ================================
+         1. HERO SECTION
+         Project summary, CTAs, and meta
+    ================================= -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-main">
+            <span class="badge-project">Personal Technical Project</span>
+
+            <h1>Engagement Database &amp; UI</h1>
+
+            <p class="hero-intro">
+              A platform that consolidates engagement data stored across multiple spreadsheets into a relational database and simple 
+              user interface (UI), making it easier to view, filter, and update data.
+            </p>
+
+            <div class="cta-row">
+              <a class="btn-primary" href="https://lisamonozlai-interactive-database-demo.streamlit.app/" target="_blank" rel="noopener noreferrer">
+                ▶ View the Platform
+              </a>
+              <a class="btn-outline" href="https://github.com/lisamonozlai/relational-database-for-engagement-tracking" target="_blank" rel="noopener noreferrer">
+                Code Files
+              </a>
+            </div>
+          </div>
+
+          <aside class="hero-meta-box" aria-label="Project details">
+            <p><strong>Author:</strong> Lisa Monozlai</p>
+            <p><strong>Tech:</strong> Python, SQLite, SQL, Streamlit</p>
+            <p><strong>Data:</strong> Fictional</p>
+            <p><strong>Project Type:</strong> Portfolio</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ================================
+         2. INTERFACE PREVIEWS
+         Static screenshots with modal zoom
+    ================================= -->
+    <section class="section bg-white">
+      <div class="container">
+        <h2 class="section-title">Interface Previews</h2>
+
+        <p>
+          These previews show how the platform displays, filters, and organizes engagement data across multiple years.
+        </p>
+
+        <div class="screens-grid">
+          <div class="screen-card">
+            <p class="screen-title">Directory View</p>
+            <img src="assets/images/directory.png" alt="Directory view of engagement records" class="screen-img">
+          </div>
+
+          <div class="screen-card">
+            <p class="screen-title">Overview Dashboard</p>
+            <img src="assets/images/overview.png" alt="Overview dashboard summarizing engagement metrics" class="screen-img">
+          </div>
+
+          <div class="screen-card">
+            <p class="screen-title">Insights</p>
+            <img src="assets/images/insights.png" alt="Insights view showing charts and filters" class="screen-img">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ================================
+         3. APPROACH
+         Three-step workflow from raw data to UI
+    ================================= -->
+    <section class="section bg-charcoal">
+      <div class="container">
+        <h2 class="section-title" style="color: white;">Approach</h2>
+
+        <p style="color: white;">
+          Turn multiple spreadsheets into an interactive platform that non‑technical teams can use to manage data.
+        </p>
+
+        <div class="approach-grid">
+          <div class="approach-card">
+            <p style="color:#1a3d6f;"><strong>Step 1</strong></p>
+            <p class="flow-title">Data Cleaning</p>
+            <p class="flow-text">
+              Standardize terms, fields, and formats so the data can be merged reliably.
+            </p>
+          </div>
+
+          <div class="approach-card">
+            <p style="color:#1a3d6f;"><strong>Step 2</strong></p>
+            <p class="flow-title">Relational Database</p>
+            <p class="flow-text">
+              Load the Excel files into a relational database so they can be analyzed together and maintained as a single source of truth.
+            </p>
+          </div>
+
+          <div class="approach-card">
+            <p style="color:#1a3d6f;"><strong>Step 3</strong></p>
+            <p class="flow-title">Interactive Platform</p>
+            <p class="flow-text">
+              Build a clear UI so non‑technical teams can view, filter, update, and visualize data without touching the source files.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ================================
+         4. TECH STACK
+         Tools and their roles in the system
+    ================================= -->
+    <section class="section bg-offwhite">
+      <div class="container">
+        <h2 class="section-title">Tech Stack</h2>
+
+        <p>
+          This project uses Python, SQL, SQLite, and Streamlit.
+          Python and SQL are languages that can scale with enterprise databases, while SQLite and Streamlit are lightweight tools that may
+          not always support large‑scale applications. Nevertheless, the underlying techniques and workflows align with those used in production.
+        </p>
+
+        <div class="tool-grid">
+          <div class="tool-card">
+            <a href="https://www.python.org/" target="_blank" rel="noopener noreferrer">
+              <p style="color:#1a3d6f;"><strong>Python</strong></p>
+              <p class="flow-title">Data Processing</p>
+              <p class="tool-text">
+                Cleans, merges, and standardizes the spreadsheets so the data is ready for storage.
+              </p>
+            </a>
+          </div>
+
+          <div class="tool-card">
+            <a href="https://www.sqlite.org/" target="_blank" rel="noopener noreferrer">
+              <p style="color:#1a3d6f;"><strong>SQLite</strong></p>
+              <p class="flow-title">Database Engine</p>
+              <p class="tool-text">
+                Stores the processed data in a lightweight relational database that’s easy to maintain.
+              </p>
+            </a>
+          </div>
+
+          <div class="tool-card">
+            <a href="https://www.w3schools.com/sql/" target="_blank" rel="noopener noreferrer">
+              <p style="color:#1a3d6f;"><strong>SQL</strong></p>
+              <p class="flow-title">Query Language</p>
+              <p class="tool-text">
+                Retrieves, filters, and updates records through structured queries.
+              </p>
+            </a>
+          </div>
+
+          <div class="tool-card">
+            <a href="https://streamlit.io/" target="_blank" rel="noopener noreferrer">
+              <p style="color:#1a3d6f;"><strong>Streamlit</strong></p>
+              <p class="flow-title">User Interface</p>
+              <p class="tool-text">
+                Provides a clear, browser‑based interface for browsing, filtering, and updating records.
+              </p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ================================
+         5. RESULTS
+         Outcomes of the architecture and UI
+    ================================= -->
+    <section class="section bg-charcoal">
+      <div class="container">
+        <h2 class="section-title">Results</h2>
+
+        <p>
+          The result is a platform that replaces fragmented spreadsheets with a maintainable relational architecture.
+        </p>
+
+        <div class="card-grid">
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Unified Records</strong></p>
+            <p class="flow-title">A Single Source of Truth</p>
+            <p class="info-text">
+              Users can browse all engagement records across 2022 to 2024 in a single, consistent view.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Structured Interactions</strong></p>
+            <p class="flow-title">Validated Data Entry</p>
+            <p class="info-text">
+              Records can be added, edited, and deleted through validated forms, reducing errors common in spreadsheet workflows.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Actionable Insights</strong></p>
+            <p class="flow-title">Patterns and Trends</p>
+            <p class="info-text">
+              Charts and filters make it easier to identify patterns by industry, region, and organization.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ================================
+         6. SCALING THE ARCHITECTURE
+         Low-code and technical alternatives
+    ================================= -->
+    <section class="section bg-white">
+      <div class="container">
+        <h2 class="section-title">Scaling the Architecture</h2>
+
+        <p>
+          This project uses lightweight, free tools appropriate for a personal portfolio.
+          In organizational settings, teams often select tools that support privacy, compliance, access controls, and higher data volumes.
+          The examples below illustrate common low‑code and technical alternatives.
+        </p>
+        <p><em>These examples are provided for context and are not endorsements.</em></p>
+
+        <div class="card-grid scaling-grid">
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Data Processing</strong></p>
+            <p class="info-text">
+              <strong>Low Code:</strong> Manual cleaning in Excel or Google Sheets<br>
+              <strong>Technical:</strong> Python with Pandas, dbt Core, Apache Spark<br>
+            </p>
+          </div>
+
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Data Storage</strong></p>
+            <p class="info-text">
+              <strong>Low Code:</strong> Airtable, SharePoint Lists, Google Sheets<br>
+              <strong>Technical:</strong> PostgreSQL, MySQL, Snowflake<br>
+            </p>
+          </div>
+
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Data Linking</strong></p>
+            <p class="info-text">
+              <strong>Low Code:</strong> Airtable Automate, Power Automate, AppSheet<br>
+              <strong>Technical:</strong> Apache Airflow, Prefect, AWS Lambda<br>
+            </p>
+          </div>
+
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>UI Development</strong></p>
+            <p class="info-text">
+              <strong>Low Code:</strong> Airtable Interfaces, Power Apps, AppSheet<br>
+              <strong>Technical:</strong> React, Django, Flask<br>
+            </p>
+          </div>
+        </div>
+
+        <!-- Return button aligned with container content -->
+        <a href="index.html" class="btn-return">Return to Home</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================================
+       IMAGE MODAL MARKUP
+       Used for zooming interface screenshots
+  ================================= -->
+  <div id="imgModal" class="modal" aria-hidden="true">
+    <span class="modal-close" aria-label="Close image modal">&times;</span>
+    <img class="modal-content" id="modalImg" alt="Expanded interface preview">
   </div>
 
-  <!-- PRINCIPLE 2 -->
-  <div class="principle-row">
-    <div class="principle-summary-card">
-      <div class="principle-title">Principle 2: Model Relationships in a Relational Database</div>
-      <p>
-        A relational database can help the team link spreadsheets together so they reduce duplication and keep information in a single place.
-      </p>
-    </div>
-    <a class="example-card" href="https://github.com/lisamonozlai/relational-database-for-engagement-tracking/tree/main/db" target="_blank">
-      <div class="example-label">See Example →</div>
-      <div class="example-link">Set up a database that links each spreadsheet together using Python and SQL.</div>
-    </a>
-  </div>
+  <!-- ================================
+       MODAL SCRIPT
+       Handles opening/closing screenshot modal
+  ================================= -->
+  <script>
+    const modal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("modalImg");
+    const closeBtn = document.querySelector(".modal-close");
 
-  <!-- PRINCIPLE 3 -->
-  <div class="principle-row">
-    <div class="principle-summary-card">
-      <div class="principle-title">Principle 3: Provide a UI for Exploration and Updates</div>
-      <p>
-        A simple UI helps staff filter, explore, and update records without touching raw tables, which improves accuracy and reduces maintenance effort.
-      </p>
-    </div>
-    <a class="example-card" href="https://github.com/lisamonozlai/relational-database-for-engagement-tracking/blob/main/readme.md" target="_blank">
-      <div class="example-label">See Example →</div>
-      <div class="example-link">Create an interactive UI in Streamlit to make the database accessible for all audiences.</div>
-    </a>
-  </div>
-
-</section>
-
-<section class="case-section" style="margin-top:40px;">
-  <h2 class="case-section-title">Results</h2>
-  <p>
-    By combining standardized templates, a relational schema, and a simple UI, the team can move from scattered spreadsheets to a coherent engagement picture. Staff can answer questions faster, trust that records are consistent, and maintain the system without specialized technical support.
-  </p>
-  <br><a href="https://lisamonozlai.github.io" class="back-link">← Back to Main Site</a>
-</section>
-
-</section>
-</div>
-
-<footer>© 2025 Lisa Monozlai | A personal portfolio site.</footer>
-
-<script>
-  const sections = document.querySelectorAll('.fade-section');
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
+    // Attach click handlers to all preview images
+    document.querySelectorAll(".screen-img").forEach(img => {
+      img.addEventListener("click", () => {
+        modal.style.display = "block";
+        modal.setAttribute("aria-hidden", "false");
+        modalImg.src = img.src;
+        modalImg.alt = img.alt;
       });
-    },
-    { threshold: 0.15 }
-  );
-  sections.forEach(section => observer.observe(section));
-</script>
+    });
+
+    // Close modal when clicking the close icon
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+      modal.setAttribute("aria-hidden", "true");
+    });
+
+    // Close modal when clicking outside the image
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+      }
+    });
+  </script>
+
+  <!-- ================================
+       FOOTER
+  ================================= -->
+  <footer>
+    © 2026 Lisa Monozlai | A Personal Portfolio Site
+  </footer>
 
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
