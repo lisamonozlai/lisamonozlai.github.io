@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Exploratory Data Analysis & Insights | Lisa Monozlai</title>
+
+<meta name="description" content="Using Python, pandas, seaborn, and scipy to transform a dataset into clear, decision-relevant insights for policy and program design. By Lisa Monozlai.">  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ================================
+       THEME TOKENS
+       Reusable color, radius, and shadow variables
+    ================================= */
+    :root {
+      --bg-page: #fafafa;
+      --bg-card: #ffffff;
+      --text-main: #000000;
+      --text-muted: #555555;
+      --accent: #284335;
+      --divider: #e3e3e3;
+      --radius: 16px;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.12);
+
+      --white: #ffffff;
+      --offwhite: #fafafa;
+      --charcoal: #323231;
+    }
+
+    /* ================================
+       GLOBAL RESET & BASE TYPOGRAPHY
+    ================================= */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      font-size: 1.05rem;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ================================
+       HEADER & TOP NAVIGATION
+    ================================= */
+    #site-header {
+      width: 100%;
+      padding: 20px 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: #323231;
+      font-weight: 500;
+      position: relative;
+      padding: 0 8px;
+    }
+
+    .nav-link:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 16px;
+      background-color: #b5b5b5;
+    }
+
+    /* Main content spacing (accounts for absolute header) */
+    main {
+      padding: 130px 0 72px;
+    }
+
+    /* ================================
+       SECTION LAYOUT & BACKGROUNDS
+    ================================= */
+    .section {
+      padding: 72px 0;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--divider);
+    }
+
+    .bg-white {
+      background: var(--white);
+    }
+
+    .bg-offwhite {
+      background: var(--offwhite);
+    }
+
+    .bg-charcoal {
+      background: var(--charcoal);
+      color: #ffffff;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 0 0 20px;
+    }
+
+    /* ================================
+       HERO CARD
+    ================================= */
+    .hero-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .hero-main {
+      flex: 2;
+    }
+
+    .hero-meta-box {
+      margin-top: 50px;
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--divider);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      align-self: flex-start;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      margin: 0 0 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-intro {
+      margin: 0 0 30px;
+      max-width: 620px;
+    }
+
+    .badge-project {
+      display: inline-block;
+      background: #d9ecff;
+      color: #284335;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    /* ================================
+       BUTTONS (Primary, Outline, Return)
+    ================================= */
+    .btn-primary,
+    .btn-outline,
+    .btn-return {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(40, 67, 53, 0.25);
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-return {
+      background: #ffffff;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      margin-top: 40px;
+    }
+
+    .btn-primary:hover,
+    .btn-outline:hover,
+    .btn-return:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(40, 67, 53, 0.25);
+    }
+
+    /* ================================
+       VISUAL PREVIEW CARDS
+    ================================= */
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 28px;
+    }
+
+    .screen-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+    }
+
+    .screen-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 12px;
+    }
+
+    .screen-img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .screen-img:hover {
+      transform: scale(1.02);
+    }
+
+    /* ================================
+       IMAGE MODAL (Lightbox)
+    ================================= */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+
+    .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      border-radius: 12px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* ================================
+       APPROACH GRID (4 STEPS)
+    ================================= */
+    .approach-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .approach-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+      text-align: left;
+      position: relative;
+    }
+
+    .approach-card:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: var(--white);
+    }
+
+    /* ================================
+       GENERIC GRIDS (Tools, Results, Scaling)
+    ================================= */
+    .tool-grid,
+    .card-grid {
+      display: grid;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .tool-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tool-card,
+    .info-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .tool-card a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+
+    .tool-title,
+    .info-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 8px;
+      color: #000000;
+    }
+
+    .tool-text,
+    .info-text {
+      font-size: 0.96rem;
+      margin: 0;
+      color: #000000;
+    }
+
+    .scaling-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    /* ================================
+       RESPONSIVE ADJUSTMENTS
+    ================================= */
+    @media (max-width: 840px) {
+      .hero-card {
+        flex-direction: column;
+        padding: 30px 24px;
+      }
+
+      .screens-grid,
+      .tool-grid,
+      .card-grid,
+      .approach-grid,
+      .scaling-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .approach-card:not(:last-child)::after {
+        display: none;
+      }
+    }
+
+    /* ================================
+       FOOTER
+    ================================= */
+    footer {
+      text-align: center;
+      padding: 36px 20px 40px;
+      font-size: 0.9rem;
+      color: #888888;
+      background: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================================
+       FIXED HEADER NAVIGATION
+  ================================= -->
+  <header id="site-header">
+    <div class="container nav-container">
+      <nav class="top-nav" aria-label="Primary navigation">
+        <a href="https://lisamonozlai.github.io/" target="_blank" class="nav-link">Home</a>
+        <a href="https://www.linkedin.com/in/lisamonozlai/" target="_blank" class="nav-link">LinkedIn</a>
+        <a href="https://github.com/lisamonozlai" target="_blank" class="nav-link">GitHub</a>
+        <a href="https://medium.com/@lisa.monozlai/about" target="_blank" class="nav-link">Medium</a>
+        <a href="https://www.kaggle.com/lisamonozlai" target="_blank" class="nav-link">Kaggle</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================================
+         1. HERO SECTION
+    ================================= -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-main">
+            <span class="badge-project">Personal Technical Project</span>
+
+            <h1>Exploratory Data Analysis &amp; Insights</h1>
+
+            <p class="hero-intro">
+              A demonstration of how Python can be used to explore a complex dataset, visualize patterns, and translate
+              exploratory analysis into clear, decision-relevant insights for policy and program design.
+            </p>
+
+                        <div class="cta-row">
+              <a class="btn-primary" href="https://github.com/lisamonozlai/analytics-for-policy-and-program-design/blob/main/summary/eda_diabetes_progression_summary.pdf" target="_blank">
+                ▶ View the Summary
+              </a>
+              <a class="btn-outline" href="https://github.com/lisamonozlai/analytics-for-policy-and-program-design/blob/main/notebook/eda_diabetes_progression.ipynb" target="_blank">
+                Code File
+              </a>
+            </div>
+          </div>
+
+          <aside class="hero-meta-box" aria-label="Project details">
+            <p><strong>Author:</strong> Lisa Monozlai</p>
+            <p><strong>Tech:</strong> Python, pandas, seaborn, scipy</p>
+            <p><strong>Dataset:</strong> <a href="https://www4.stat.ncsu.edu/%7Eboos/var.select/diabetes.html" target="_blank">2004 Diabetes Dataset</a></p>
+            <p><strong>Project Type:</strong> Portfolio</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ================================
+         2. VISUAL PREVIEWS
+    ================================= -->
+    <section class="section bg-white">
+      <div class="container">
+        <h2 class="section-title">Visual Overview</h2>
+
+        <p>
+          Below are visualizations made in Python using a <a href="https://www4.stat.ncsu.edu/%7Eboos/var.select/diabetes.html" target="_blank">2004 Diabetes Dataset (Open Source)</a>. They show how visual analysis can help us understand how demographics and 
+          various clinical indicators may influence health outcomes.
+        </p>
+
+        <div class="screens-grid">
+          <div class="screen-card">
+            <p class="screen-title">Outcome Distribution</p>
+            <img src="histogram.png" alt="Histogram showing distribution of diabetes progression scores" class="screen-img">
+          </div>
+
+          <div class="screen-card">
+            <p class="screen-title">Progression by Age &amp; Sex</p>
+            <img src="bar_chart_1.png" alt="Bar chart showing average progression by age group and sex" class="screen-img">
+          </div>
+
+          <div class="screen-card">
+            <p class="screen-title">Health Metrics &amp; Progression</p>
+            <img src="scatter_plots.png" alt="Scatter plots showing health metrics versus progression" class="screen-img">
+          </div>
+
+          <div class="screen-card">
+            <p class="screen-title">Strength of Association</p>
+            <img src="bar_chart_2.png" alt="Bar chart showing strength of linear relationship between predictors and progression" class="screen-img">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ================================
+         3. ANALYTICAL APPROACH
+    ================================= -->
+    <section class="section bg-charcoal">
+      <div class="container">
+        <h2 class="section-title" style="color: white;">Analytical Approach</h2>
+
+        <p style="color: white;">
+          This project applies a workflow designed to answer the question: "Which factors most influence diabetes progression?"
+        </p>
+
+        <div class="approach-grid">
+          <div class="approach-card">
+            <p style="color:#1a3d6f;"><strong>Step 1</strong></p>
+            <p class="tool-title">Learn About the Data</p>
+            <p class="tool-text">
+              Use histograms to understand the shape of the outcome and identify any unusual patterns.
+            </p>
+          </div>
+
+          <div class="approach-card">
+            <p style="color:#1a3d6f;"><strong>Step 2</strong></p>
+            <p class="tool-title">Look at Demographics</p>
+            <p class="tool-text">
+              Use bar charts to compare how demographic characteristics influence progression.
+            </p>
+          </div>
+
+          <div class="approach-card">
+            <p style="color:#1a3d6f;"><strong>Step 3</strong></p>
+            <p class="tool-title">Look at Health Factors</p>
+            <p class="tool-text">
+              Use scatter plots with trend lines to examine how key health indicators relate to progression.
+            </p>
+          </div>
+
+          <div class="approach-card">
+            <p style="color:#1a3d6f;"><strong>Step 4</strong></p>
+            <p class="tool-title">Confirm Relationships</p>
+            <p class="tool-text">
+              Calculate trend slopes for continuous variables to see how strongly each factor impacts progression.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ================================
+     4. TECH STACK
+================================= -->
+<section class="section bg-offwhite">
+  <div class="container">
+    <h2 class="section-title">Tech Stack</h2>
+
+    <p>
+      This project uses a lightweight Python stack to move from raw data to clear, interpretable insight. 
+    </p>
+
+    <div class="tool-grid">
+
+      <div class="tool-card">
+        <a href="https://www.python.org/" target="_blank" rel="noopener noreferrer">
+          <p style="color:#1a3d6f;"><strong>Python</strong></p>
+          <p class="tool-title">Core Language</p>
+          <p class="tool-text">
+            Coordinates the workflow, loads the dataset, and runs the analysis from start to finish.
+          </p>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://pandas.pydata.org/" target="_blank" rel="noopener noreferrer">
+          <p style="color:#1a3d6f;"><strong>pandas</strong></p>
+          <p class="tool-title">Data Wrangling</p>
+          <p class="tool-text">
+            Structures the dataset, handles grouping and aggregation, and prepares variables for analysis.
+          </p>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://seaborn.pydata.org/" target="_blank" rel="noopener noreferrer">
+          <p style="color:#1a3d6f;"><strong>seaborn</strong></p>
+          <p class="tool-title">Visualization</p>
+          <p class="tool-text">
+            Creates the histograms, bar charts, and scatter plots used to reveal patterns in the data.
+          </p>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://scipy.org/" target="_blank" rel="noopener noreferrer">
+          <p style="color:#1a3d6f;"><strong>scipy</strong></p>
+          <p class="tool-title">Statistical Tools</p>
+          <p class="tool-text">
+            Computes trend slopes and summary statistics to compare the strength of each relationship.
+          </p>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+    <div class="divider"></div>
+
+    <!-- ================================
+         5. KEY FINDINGS
+    ================================= -->
+    <section class="section bg-charcoal">
+      <div class="container">
+        <h2 class="section-title">Key Findings</h2>
+
+        <p>
+          <strong>BMI</strong> and <strong>triglycerides</strong> showed the strongest positive correlation with diabetes progression,
+          which suggests that public health teams may want to focus their interventions on those factors. 
+        </p>
+
+        <div class="card-grid">
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Strongest Associations</strong></p>
+            <p class="info-title">BMI &amp; Triglycerides (S5)</p>
+            <p class="info-text">
+              These variables show the steepest trend slopes with progression, suggesting they are the most influential levers in this dataset.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Protective Indicator</strong></p>
+            <p class="info-title">HDL Cholesterol (S3)</p>
+            <p class="info-text">
+              Higher HDL cholesterol appears to have a negative correlation with progression, meaning it has a protective effect.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <p style="color:#1a3d6f;"><strong>Limited Demographic Impact</strong></p>
+            <p class="info-title">Age &amp; Sex</p>
+            <p class="info-text">
+              Age and sex show weak associations with progression, which suggests interventions focused on health factors would be more effective.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+  <!-- ================================
+     6. LIMITATIONS
+================================= -->
+<section class="section bg-white">
+  <div class="container">
+    <h2 class="section-title">Limitations</h2>
+
+    <p>
+      This analysis is exploratory and descriptive. It highlights patterns but does not estimate causal effects or predict individual outcomes. 
+      The findings should be read as early signals that guide further investigation, not definitive evidence.
+    </p>
+
+    <div class="card-grid scaling-grid">
+
+      <div class="info-card">
+        <p style="color:#1a3d6f;"><strong>Dataset Constraints</strong></p>
+        <p class="info-text">
+          The dataset is small, collected in 2004, and includes a limited set of clinical variables. Important
+          behavioral, social, and environmental factors are not captured.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <p style="color:#1a3d6f;"><strong>Correlation, Not Causation</strong></p>
+        <p class="info-text">
+          The analysis shows associations but can't confirm causation. 
+          Establishing causation requires a study design that supports valid comparisons.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <p style="color:#1a3d6f;"><strong>Model Simplicity</strong></p>
+        <p class="info-text">
+          Trend slopes provide a simple way to compare relationships, but they do not account for interactions,
+          nonlinear effects, or confounding variables.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <p style="color:#1a3d6f;"><strong>Generalizability</strong></p>
+        <p class="info-text">
+          Because the dataset is narrow and standardized, the patterns may not generalize to broader or more diverse
+          populations without further validation.
+        </p>
+      </div>
+      </div>
+       <!-- Return button aligned with container content -->
+        <a href="index.html" class="btn-return">Return to Home</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================================
+       IMAGE MODAL MARKUP
+    ================================= -->
+  <div id="imgModal" class="modal" aria-hidden="true">
+    <span class="modal-close" aria-label="Close image modal">&times;</span>
+    <img class="modal-content" id="modalImg" alt="Expanded visualization preview">
+  </div>
+
+  <!-- ================================
+       MODAL SCRIPT
+    ================================= -->
+  <script>
+    const modal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("modalImg");
+    const closeBtn = document.querySelector(".modal-close");
+
+    document.querySelectorAll(".screen-img").forEach(img => {
+      img.addEventListener("click", () => {
+        modal.style.display = "block";
+        modal.setAttribute("aria-hidden", "false");
+        modalImg.src = img.src;
+        modalImg.alt = img.alt;
+      });
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+      modal.setAttribute("aria-hidden", "true");
+    });
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+      }
+    });
+  </script>
+
+  <footer>
+    © 2026 Lisa Monozlai | A Personal Portfolio Site
+  </footer>
+
+</body>
+</html>
